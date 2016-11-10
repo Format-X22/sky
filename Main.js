@@ -1,12 +1,10 @@
-/**
- * Входная точка приложения.
- */
 Ext.define('Q.Main', {
     extend: 'Q.core.Base',
 
     requires: [
         'Q.Mongo',
-        'Q.Poloniex'
+        'Q.Poloniex',
+        'Q.Sky'
     ],
 
     init: function () {

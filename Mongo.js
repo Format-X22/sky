@@ -1,6 +1,3 @@
-/**
- * Класс для работы с базой данных.
- */
 Ext.define('Q.Mongo', {
     extend: 'Q.core.Base',
     singleton: true,
