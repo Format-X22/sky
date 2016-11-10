@@ -7,7 +7,7 @@ Ext.define('Q.Main', {
     requires: [
         'Q.Decimal',
         'Q.Mongo',
-        'Q.stock.Poloniex'
+        'Q.Poloniex'
     ],
 
     init: function () {

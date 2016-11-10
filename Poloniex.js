@@ -1,37 +1,12 @@
 /**
- * Абстрактный класс работы с биржей.
+ * Работа с американской биржей Poloniex.
  */
-Ext.define('Q.stock.Abstract', {
+Ext.define('Q.Poloniex', {
     extend: 'Q.core.Base',
 
     requires: [
-        'Q.stock.data.Order'
+        'Q.Order'
     ],
-
-    config: {
-
-        /**
-         * @required
-         * @cfg {String} mongoCollectionName Имя используемой коллекции в базе.
-         */
-        mongoCollectionName: '',
-
-        /**
-         * @private
-         * @cfg {String} mongoLogCollectionName
-         * Имя используемой коллекции в базе для логов.
-         * Устанавливается автоматически.
-         */
-        mongoLogCollectionName: '',
-    },
-
-    constructor: function () {
-        this.callParent(arguments);
-
-        this.setMongoLogCollectionName(
-            `${this.getMongoCollectionName()}Log`
-        );
-    },
 
     /**
      * Получение данных свечек.
@@ -88,7 +63,7 @@ Ext.define('Q.stock.Abstract', {
      * @return {Ext.promise.Promise} Промис.
      */
     getMongoCollection: function () {
-        return Q.Mongo.getCollection(this.getMongoCollectionName());
+        return Q.Mongo.getCollection('Poloniex');
     },
 
     /**
@@ -96,6 +71,6 @@ Ext.define('Q.stock.Abstract', {
      * @return {Ext.promise.Promise} Промис.
      */
     getLogCollection: function () {
-        return Q.Mongo.getCollection(this.getMongoLogCollectionName());
+        return Q.Mongo.getCollection('PoloniexLog');
     }
 });

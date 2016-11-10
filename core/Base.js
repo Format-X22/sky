@@ -6,10 +6,6 @@ Ext.define('Q.core.Base', {
         'Q.core.Logger'
     ],
 
-    requires: [
-        'Q.util.Function'
-    ],
-
     constructor: function (config) {
         this.initConfig(
             Ext.apply(
@@ -17,16 +13,5 @@ Ext.define('Q.core.Base', {
                 config
             )
         );
-    },
-
-    /**
-     * Создает асинхронную очередь выполнения,
-     * в каждую последующую функцию передается
-     * колбек для вызова следующей.
-     * @param {Function[]} callbacks Массив функций.
-     * @param {Object} [defaultScope] Базовый скоп для функций.
-     */
-    queue: function () {
-        Q.util.Function.queue.apply(this, arguments);
     }
 });

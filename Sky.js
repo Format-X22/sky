@@ -1,8 +1,9 @@
-Ext.define('Q.algorithm.Sky', {
+Ext.define('Q.Sky', {
     extend: 'Q.core.Base',
 
     config: {
-        stock: null
+        stock: null,
+        pairs: null,
     },
 
     run: function () {

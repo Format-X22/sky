@@ -1,7 +1,7 @@
 /**
  * Класс для хранения свойств ордера.
  */
-Ext.define('Q.stock.data.Order', {
+Ext.define('Q.Order', {
 
     /**
      * @property {String} pair Идентификатор торговой пары.
