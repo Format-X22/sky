@@ -1,8 +1,8 @@
 /**
  * Класс для работы с базой данных.
  */
-Ext.define('Sky.Mongo', {
-    extend: 'Sky.Base',
+Ext.define('Q.Mongo', {
+    extend: 'Q.core.Base',
     singleton: true,
 
     config: {
@@ -52,21 +52,25 @@ Ext.define('Sky.Mongo', {
      * @return {Ext.Deferred} Промис, возвращающий объект базы данных {@link #cfg-dbObject}.
      */
     connect: function () {
-        return Ext.Promise((resolve) => {
-            this.getClient().connect(this.getConnectString()).then(
-                (db) => {
-                    this.setDbObject(db);
-                    resolve(db)
-                },
-                (error) => {
-                    this.logError(error);
+        var deferred = new Ext.Deferred;
 
-                    setTimeout(() => {
-                        this.connect().then((db) => resolve(db));
-                    }, this.getReconnectTime());
-                }
-            );
-        });
+        this.getClient().connect(this.getConnectString()).then(
+            (db) => {
+                this.setDbObject(db);
+                deferred.resolve(db)
+            },
+            (error) => {
+                this.logError(error);
+
+                setTimeout(() => {
+                    this.connect().then((db) =>
+                        deferred.resolve(db)
+                    );
+                }, this.getReconnectTime());
+            }
+        );
+
+        return deferred.promise;
     },
 
     /**
@@ -75,19 +79,20 @@ Ext.define('Sky.Mongo', {
      * @return {Ext.Deferred} Промис, возвращающий коллекцию монги.
      */
     getCollection: function (name) {
-        var promiseBody = function self (resolve) {
-            var collection = this.getDbObject().collection(name);
+        var deferred = new Ext.Deferred;
+        var collection = this.getDbObject().collection(name);
 
-            if (collection) {
-                resolve(collection);
-            } else {
-                this.logError(`Не удалось получить коллекцию ${name}, переподключение...`);
+        if (collection) {
+            deferred.resolve(collection);
+        } else {
+            this.logError(`Не удалось получить коллекцию ${name}, переподключение...`);
 
-                this.connect().then(() => self(resolve));
-            }
-        }.bind(this);
+            this.connect().then(() =>
+                this.getCollection(name)
+            );
+        }
 
-        return Ext.Promise(promiseBody);
+        return deferred.promise;
     },
 
     /**

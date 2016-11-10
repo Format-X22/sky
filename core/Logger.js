@@ -1,17 +1,21 @@
 /**
- * Миксина-логгер.
+ * Логгер, может логировать сообщения в разном формате - info, warn, error.
+ * Автоматически подставляет дату.
  */
-Ext.define('Sky.Logger', {
+Ext.define('Q.core.Logger', {
 
     /**
      * Логгирует сообщение.
      * @param {String} message Сообщение.
      * @param {String} [type] Тип сообщения.
      */
-    log: function (message, type = 'INFO') {
-        var date = new Date;
+    log: function (message, type = 'info') {
+        var date = Ext.Date.format(new Date, 'd.m.Y H:m:s');
 
-        console.log(`${date}, ${type}, ${message}`);
+        Ext.log({
+            level: type,
+            msg: `${date} >> ${message}`
+        });
 
         this.getLogCollection().then(
             (collection) =>
@@ -27,7 +31,15 @@ Ext.define('Sky.Logger', {
      * @param {String} message Сообщение.
      */
     logError: function (message) {
-        this.log('ERROR', message);
+        this.log('error', message);
+    },
+
+    /**
+     * Логгирует предупреждение.
+     * @param {String} message Сообщение.
+     */
+    logWarn: function (message) {
+        this.log('warn', message);
     },
 
     /**

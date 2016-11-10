@@ -1,7 +1,7 @@
 /**
  * Класс для хранения свойств ордера.
  */
-Ext.define('Sky.stock.data.Order', {
+Ext.define('Q.stock.data.Order', {
 
     /**
      * @property {String} pair Идентификатор торговой пары.
@@ -9,17 +9,17 @@ Ext.define('Sky.stock.data.Order', {
     pair: '',
 
     /**
-     * @property {Sky.Decimal} price Цена.
+     * @property {Q.Decimal} price Цена.
      */
     price: null,
 
     /**
-     * @property {Sky.Decimal} amount Количество.
+     * @property {Q.Decimal} amount Количество.
      */
     amount: null,
 
     /**
-     * @property {Sky.Decimal} loan Значение маржина.
+     * @property {Q.Decimal} loan Значение маржина.
      */
     loan: null
 

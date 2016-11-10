@@ -1,11 +1,11 @@
 /**
  * Абстрактный класс работы с биржей.
  */
-Ext.define('Sky.stock.Abstract', {
-    extend: 'Sky.Base',
+Ext.define('Q.stock.Abstract', {
+    extend: 'Q.core.Base',
 
     requires: [
-        'Sky.stock.data.Order'
+        'Q.stock.data.Order'
     ],
 
     config: {
@@ -34,60 +34,68 @@ Ext.define('Sky.stock.Abstract', {
     },
 
     /**
+     * Получение данных свечек.
+     * @return {Ext.promise.Promise} Промис.
+     */
+    getCandles: function () {
+        return (new Ext.Deferred).promise;
+    },
+
+    /**
      * Получение стакана заявок.
-     * @return {Ext.Deferred} Промис.
+     * @return {Ext.promise.Promise} Промис.
      */
     getGlass: function () {
-        return Ext.Promise((resolve) => resolve());
+        return (new Ext.Deferred).promise;
     },
 
     /**
      * Получения списка текущих ордеров.
-     * @return {Ext.Deferred} Промис.
+     * @return {Ext.promise.Promise} Промис.
      */
     getOrders: function () {
-        return Ext.Promise((resolve) => resolve());
+        return (new Ext.Deferred).promise;
     },
 
     /**
      * Получение количества доступных средств.
-     * @return {Ext.Deferred} Промис.
+     * @return {Ext.promise.Promise} Промис.
      */
     getMoney: function () {
-        return Ext.Promise((resolve) => resolve());
+        return (new Ext.Deferred).promise;
     },
 
     /**
      * Установка ордера.
-     * @param {Sky.stock.data.Order} order Объект ордера.
-     * @return {Ext.Deferred} Промис.
+     * @param {Q.stock.data.Order} order Объект ордера.
+     * @return {Ext.promise.Promise} Промис.
      */
     setOrder: function (order) {
-        return Ext.Promise((resolve) => resolve());
+        return (new Ext.Deferred).promise;
     },
 
     /**
      * Удаление ордера.
      * @param {String/Number} id Идентификатор ордера.
-     * @return {Ext.Deferred} Промис.
+     * @return {Ext.promise.Promise} Промис.
      */
     removeOrder: function (id) {
-        return Ext.Promise((resolve) => resolve());
+        return (new Ext.Deferred).promise;
     },
 
     /**
      * Получение рабочей коллекции базы.
-     * @return {Ext.Deferred} Промис.
+     * @return {Ext.promise.Promise} Промис.
      */
     getMongoCollection: function () {
-        return Sky.Mongo.getCollection(this.getMongoCollectionName());
+        return Q.Mongo.getCollection(this.getMongoCollectionName());
     },
 
     /**
      * Получение рабочей коллекции базы для логов.
-     * @return {Ext.Deferred} Промис.
+     * @return {Ext.promise.Promise} Промис.
      */
     getLogCollection: function () {
-        return Sky.Mongo.getCollection(this.getMongoLogCollectionName());
+        return Q.Mongo.getCollection(this.getMongoLogCollectionName());
     }
 });

@@ -14665,7 +14665,7 @@ Ext.Loader = (new function() {
 
                         urlArray.shift();
 
-                        require('./' + urlArray.join('/'));
+                        require(global.classPath + urlArray.join('/'));
                     }, this);
                 } else {
                     // need to call checkReady here, as the _missingCoun
