@@ -10,19 +10,15 @@ Ext.define('Q.core.Logger', {
      * @param {String} [type] Тип сообщения.
      */
     log: function (message, type = 'info') {
-        var date = Ext.Date.format(new Date, 'd.m.Y H:m:s');
+        var date = Ext.Date.format(new Date, 'd.m.Y H:i:s');
 
         Ext.log({
             level: type,
             msg: `${date} >> ${message}`
         });
 
-        this.getLogCollection().then(
-            (collection) =>
-                collection.insert({date, type, message}).catch(
-                    () =>
-                        console.log(`Невозможно залоггировать событие, ошибка вставки - ${date}, ${type}, ${message}`)
-                )
+        this.getLogCollection().insert({date: new Date(), type, message}).catch(() =>
+            console.log(`Невозможно залоггировать событие, ошибка вставки - ${type}, ${message}`)
         );
     },
 
@@ -48,6 +44,6 @@ Ext.define('Q.core.Logger', {
      * @return {Ext.Deferred} Промис, возвращающий коллекцию монги для логов.
      */
     getLogCollection: function () {
-        return this.getCollection('global.log');
+        return mongo.collection('log');
     }
 });

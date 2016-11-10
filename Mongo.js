@@ -9,54 +9,38 @@ Ext.define('Q.Mongo', {
     connect: function () {
         var def = new Ext.Deferred;
 
-        this.client.connect('TODO').then(
+        this.client.connect('mongodb://localhost:8090').then(
             (db) => {
                 this.dbObject = db;
                 def.resolve(db)
             },
             (error) => {
-                this.logError(error);
-
-                setTimeout(() => {
-                    this.connect().then((db) =>
-                        def.resolve(db)
-                    );
-                }, 5000);
+                Ext.log({
+                    level: 'error',
+                    msg: `${new Date} >> Mongo connection error.`
+                });
+                process.exit(1);
             }
         );
 
         return def.promise;
     },
 
-    getCollection: function (name) {
-        var def = new Ext.Deferred;
-        var collection = this.dbObject.collection(name);
-
-        if (collection) {
-            def.resolve(collection);
-        } else {
-            this.logError(`Не удалось получить коллекцию ${name}, переподключение...`);
-
-            this.connect().then(() =>
-                def.resolve(
-                    this.dbObject.collection(name)
-                )
-            );
-        }
-
-        return def.promise;
+    collection: function (name) {
+        return this.dbObject.collection(name);
     },
 
     getMetaRecord: function () {
         var def = new Ext.Deferred;
 
-        this.getCollection('stock').then(
-            (col) => col.find({stock: 'Poloniex'}, {_id: false}).limit(1).toArray()
-        ).then(
-            (records) => def.resolve(records[0])
-        ).catch(
-            def.reject
-        );
+        this.collection('stock')
+            .find({stock: 'Poloniex'}, {_id: false})
+            .limit(1)
+            .toArray()
+            .then(
+                (records) => def.resolve(records[0]),
+                def.reject
+            );
 
         return def.promise;
     },

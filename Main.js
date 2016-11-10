@@ -12,8 +12,8 @@ Ext.define('Q.Main', {
         global.polo = Q.Poloniex;
         global.mongo = Q.Mongo;
 
-        polo.removeOrder('FCT', num(10), num(10)).then((result) => {
-            console.log(result);
-        }, (error) => console.log(error));
+        mongo.connect().then(() => {
+            this.log('Запущено.');
+        })
     }
 });
