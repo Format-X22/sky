@@ -49,7 +49,7 @@ Ext.define('Q.Mongo', {
 
     /**
      * Подключение к базе данных.
-     * @return {Ext.Deferred} Промис, возвращающий объект базы данных {@link #cfg-dbObject}.
+     * @return {Ext.promise.Promise} Промис, возвращающий объект базы данных {@link #cfg-dbObject}.
      */
     connect: function () {
         var deferred = new Ext.Deferred;
@@ -76,7 +76,7 @@ Ext.define('Q.Mongo', {
     /**
      * Получение коллекции монги.
      * @param name
-     * @return {Ext.Deferred} Промис, возвращающий коллекцию монги.
+     * @return {Ext.promise.Promise} Промис, возвращающий коллекцию монги.
      */
     getCollection: function (name) {
         var deferred = new Ext.Deferred;
@@ -88,19 +88,12 @@ Ext.define('Q.Mongo', {
             this.logError(`Не удалось получить коллекцию ${name}, переподключение...`);
 
             this.connect().then(() =>
-                this.getCollection(name)
+                deferred.resolve(
+                    this.getDbObject().collection(name)
+                )
             );
         }
 
         return deferred.promise;
-    },
-
-    /**
-     * @protected
-     * Получение коллекции монги для логов.
-     * @return {Ext.Deferred} Промис, возвращающий коллекцию монги для логов.
-     */
-    getLogCollection: function () {
-        return this.getCollection('global.log');
     }
 });

@@ -4,6 +4,8 @@
 Ext.define('Q.stock.Poloniex', {
     extend: 'Q.stock.Abstract',
 
+    mongoCollectionName: 'Poloniex',
+
     /**
      * Получение данных свечек.
      * @return {Ext.promise.Promise} Промис.
