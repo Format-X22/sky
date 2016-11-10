@@ -5,95 +5,62 @@ Ext.define('Q.Mongo', {
     extend: 'Q.core.Base',
     singleton: true,
 
-    config: {
+    driver: require('mongodb'),
+    client: require('mongodb').MongoClient,
+    dbObject: null,
 
-        /**
-         * @cfg {String} Строка подключения к монге.
-         */
-        connectString: '',
-
-        /**
-         * @cfg {Number} Время до переподключения.
-         */
-        reconnectTime: 5000,
-
-        /**
-         * @cfg {Object} Драйвер монги.
-         */
-        driver: require('mongodb'),
-
-        /**
-         * @cfg {Object} Клиент для работы с монгой.
-         */
-        client: null,
-
-        /**
-         * @cfg {Object} Объект базы данных.
-         */
-        dbObject: null,
-
-        /**
-         * @cfg {Object} Утилита для работы с идентификаторами монги.
-         */
-        objectIdUtil: null
-    },
-
-    constructor: function () {
-        this.callParent(arguments);
-
-        var driver = this.getDriver();
-
-        this.setClient(driver.MongoClient);
-        this.setObjectIdUtil(driver.ObjectID);
-    },
-
-    /**
-     * Подключение к базе данных.
-     * @return {Ext.promise.Promise} Промис, возвращающий объект базы данных {@link #cfg-dbObject}.
-     */
     connect: function () {
-        var deferred = new Ext.Deferred;
+        var def = new Ext.Deferred;
 
-        this.getClient().connect(this.getConnectString()).then(
+        this.client.connect('TODO').then(
             (db) => {
-                this.setDbObject(db);
-                deferred.resolve(db)
+                this.dbObject = db;
+                def.resolve(db)
             },
             (error) => {
                 this.logError(error);
 
                 setTimeout(() => {
                     this.connect().then((db) =>
-                        deferred.resolve(db)
+                        def.resolve(db)
                     );
-                }, this.getReconnectTime());
+                }, 5000);
             }
         );
 
-        return deferred.promise;
+        return def.promise;
     },
 
-    /**
-     * Получение коллекции монги.
-     * @param name
-     * @return {Ext.promise.Promise} Промис, возвращающий коллекцию монги.
-     */
     getCollection: function (name) {
-        var deferred = new Ext.Deferred;
-        var collection = this.getDbObject().collection(name);
+        var def = new Ext.Deferred;
+        var collection = this.dbObject.collection(name);
 
         if (collection) {
-            deferred.resolve(collection);
+            def.resolve(collection);
         } else {
             this.logError(`Не удалось получить коллекцию ${name}, переподключение...`);
 
             this.connect().then(() =>
-                deferred.resolve(
-                    this.getDbObject().collection(name)
+                def.resolve(
+                    this.dbObject.collection(name)
                 )
             );
         }
 
-        return deferred.promise;
-    }
+        return def.promise;
+    },
+
+    getMetaRecord: function () {
+        var def = new Ext.Deferred;
+
+        this.getCollection('stock').then(
+            (col) => col.find({stock: 'Poloniex'}, {_id: false}).limit(1).toArray()
+        ).then(
+            (records) => def.resolve(records[0])
+        ).catch(
+            def.reject
+        );
+
+        return def.promise;
+    },
 });
